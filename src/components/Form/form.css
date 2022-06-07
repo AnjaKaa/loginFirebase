@@ -1,0 +1,25 @@
+form {
+  display: flex;
+  flex-direction: column;
+  width: 500px;
+}
+
+.row{
+  display: flex;
+  flex-direction: column;
+}
+
+.fail {
+  color: red;  
+}
+
+.fail input{
+  border:2px solid red;
+  border-radius: 2px;
+}
+
+.errorBox {
+  line-height: 24px;
+  min-height: 24px;
+  color: red;  
+}
