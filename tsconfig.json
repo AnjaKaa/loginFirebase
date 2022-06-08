@@ -1,11 +1,15 @@
 {
   "include": [
-    "src/*"
+    "src/*",
+  ],
+  "exclude": [
+    "node_modules",
+    "__tests__"
   ],
   "compilerOptions": {
     "target": "es5",
-    "jsx": "react",
+    "jsx": "react-jsx",
     "allowSyntheticDefaultImports": true,
-    "noEmit": true,
+    "noEmit": true
   }
 }

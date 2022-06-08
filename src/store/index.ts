@@ -1,5 +1,9 @@
 import { configureStore } from "@reduxjs/toolkit";
-import userReducer from "./slices/userSlice"
+import userReducer, { IUserState } from "./slices/userSlice";
+
+export interface IRootState {
+  user: IUserState;
+}
 
 export const store = configureStore({
   reducer: {

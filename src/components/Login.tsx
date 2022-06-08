@@ -10,7 +10,7 @@ export interface ILoginProps {
 
 export function Login(props: ILoginProps) {
   const dispatch = useAppDispatch();
-  const { push } = useHistory()
+  const { push } = useHistory();
 
   const handleLogin = (email: string, password: string): void => {
     const auth = getAuth();
