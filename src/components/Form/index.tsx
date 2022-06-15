@@ -1,72 +1,64 @@
 
 import React, { ChangeEvent, useState, useMemo, FormEvent } from 'react';
-import { validateLoginForm } from "./validation";
+import { FormFieldsLogin } from './FormFieldsLogin';
+import { FormFieldsRegister } from './FormFieldsRegister';
+import { FormFieldsUserSettings } from './FormFieldsUserSettings';
 
 import './form.css';
 
+export enum formType {
+  login = 'login',
+  register = 'register',
+  info = 'info'
+}
 export interface IFormProps {
   title: string;
-  handleClick: (email: string, pass: string) => void;
+  handleClick: (formFields: { email?: string, pass?: string, name?: string, avatar?: string }) => void;
+  type: formType
 }
 
-export function Form({ title, handleClick }: IFormProps) {
-  const [email, setEmail] = useState('');
-  const [pass, setPass] = useState('');
+export function Form({ title, handleClick, type }: IFormProps) {
+  const [formFields, setFormFields] = useState(null)
   const [formValid, setFormValid] = useState(null);
-
-  const handleEmailChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setEmail(e.target.value);
-    setFormValid(
-      validateLoginForm({
-        email: e.target.value,
-        password: pass
-      })
-    );
-  }
-
-  const handlePassChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setPass(e.target.value);
-    setFormValid(
-      validateLoginForm({
-        email,
-        password: e.target.value
-      })
-    );
-  }
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
-    handleClick(email, pass)
+    handleClick(formFields);
   }
 
   return (<div>
     <form onSubmit={handleSubmit}>
-      <div className={`row ${formValid && formValid.errors['email'] ? 'fail' : ''}`}>
-        <input
-          type="email"
-          name="email"
-          value={email}
-          onChange={handleEmailChange}
-          placeholder="email"
+
+      {
+        type === formType.login &&
+        <FormFieldsLogin
+          formValid={formValid}
+          setFormFields={setFormFields}
+          setFormValid={setFormValid}
         />
-        <div className='errorBox'>{formValid && formValid.errors['email']}</div>
-      </div>
-      <div className={`row ${formValid && formValid.errors['password'] && 'fail'}`}>
-        <input
-          type="password"
-          name="password"
-          value={pass}
-          onChange={handlePassChange}
-          placeholder="password"
+      }
+      {
+        type === formType.register &&
+        <FormFieldsRegister
+          formValid={formValid}
+          setFormFields={setFormFields}
+          setFormValid={setFormValid}
         />
-        <div className='errorBox'>{formValid && formValid.errors['password']}</div>
-      </div>
+      }
+      {
+        type === formType.info &&
+        <FormFieldsUserSettings
+          formValid={formValid}
+          setFormFields={setFormFields}
+          setFormValid={setFormValid}
+        />
+      }
       {
         formValid && !formValid.success && formValid.message
       }
       <button
         type="submit"
-        disabled={formValid && !formValid.success}
+        disabled={!formValid || !formValid.success}
       >
         {title}
       </button>

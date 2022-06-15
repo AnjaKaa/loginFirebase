@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
-import { LoginPage } from './';
-import { MemoryRouter } from 'react-router-dom';
+import { UserSettingsPage } from '.';
+import { MemoryRouter } from 'react-router-dom'
 
 
 jest.mock('../../hooks/redux-hooks', () => ({
@@ -31,16 +31,14 @@ jest.mock('react-router-dom', () => ({
 }));
 
 
-describe('test LoginPage', () => {
-  it('render LoginPage', () => {
+describe('test UserSettingsPage', () => {
+  it('render UserSettingsPage', () => {
     render(
       <MemoryRouter>
-        <LoginPage />
+        <UserSettingsPage />
       </MemoryRouter>
     );
-    expect(screen.getByText(/Login/i)).toBeInTheDocument();
-    expect(screen.getByText(/register/i)).toBeInTheDocument();
-    expect(screen.getByText(/register/i).tagName).toBe('A');
+    expect(screen.getByText('User Settings')).toBeInTheDocument();
   })
 })
 

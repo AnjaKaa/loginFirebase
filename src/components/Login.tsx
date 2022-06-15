@@ -3,7 +3,7 @@ import { useAppDispatch } from '../hooks/redux-hooks'
 import { useHistory } from "react-router-dom";
 import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { setUser } from '../store/slices/userSlice';
-import { Form } from './Form';
+import { Form, formType } from './Form';
 
 export interface ILoginProps {
 }
@@ -12,21 +12,21 @@ export function Login(props: ILoginProps) {
   const dispatch = useAppDispatch();
   const { push } = useHistory();
 
-  const handleLogin = (email: string, password: string): void => {
+  const handleLogin = (formFields: { email: string, password: string }): void => {
     const auth = getAuth();
-    signInWithEmailAndPassword(auth, email, password)
+    signInWithEmailAndPassword(auth, formFields.email, formFields.password)
       .then(({ user }) => {
-        console.log('user', user);
         dispatch(setUser({
           email: user.email,
           id: user.uid,
-          token: user.refreshToken
+          token: user.getIdToken(),
+          name: user.displayName
         }));
         push('/');
       })
       .catch(() => alert('Invalid User'))
   }
   return (
-    <Form title='sing in' handleClick={handleLogin} />
+    <Form title='sing in' handleClick={handleLogin} type={formType.login} />
   );
 }

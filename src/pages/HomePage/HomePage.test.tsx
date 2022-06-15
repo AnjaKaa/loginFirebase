@@ -1,6 +1,8 @@
 import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { HomePage } from './';
+
 
 
 jest.mock('../../hooks/redux-hooks', () => ({
@@ -20,7 +22,11 @@ jest.mock('../../hooks/use-auth', () => ({
 
 describe('test HomePage', () => {
   it('render HomePage with auth', () => {
-    render(<HomePage />);
+    render(
+      <MemoryRouter>
+        <HomePage />
+      </MemoryRouter>
+    );
     expect(screen.getByText(/welcome/i)).toBeInTheDocument();
     expect(screen.getByText(/Log out/)).toBeInTheDocument();
     expect(screen.getByText('Log out').tagName).toBe('BUTTON');
