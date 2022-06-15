@@ -13,26 +13,30 @@ export function UserSettings(props: IUserSettingsProps) {
   const { push } = useHistory();
 
 
-  const handleUpdateUser = ({ password, name }: { password: string, name: string }): void => {
+  const handleUpdateUser = (params: { password: string | null, name: string }): void => {
     let auth = getAuth();
 
     Promise.all(
       [
-        updateProfile(auth.currentUser, {
-          displayName: String(name), photoURL: ""
-        }),
-        password ? updatePassword(auth.currentUser, password) : null
+        (params?.name && auth.currentUser.displayName !== params?.name)
+          ? updateProfile(auth.currentUser, {
+            displayName: String(params?.name), photoURL: ""
+          })
+          : null,
+        params?.password ? updatePassword(auth.currentUser, params.password) : null
       ]
     )
       .then(() => {
         auth = getAuth();
-        dispatch(setUser({
-          email: auth.currentUser.email,
-          id: auth.currentUser.uid,
-          token: auth.currentUser.getIdToken(),
-          name: auth.currentUser.displayName
-        }));
-        push('/')
+        auth.currentUser.getIdToken().then((token) => {
+          dispatch(setUser({
+            email: auth.currentUser.email,
+            id: auth.currentUser.uid,
+            token,
+            name: auth.currentUser.displayName
+          }));
+          push('/')
+        })
       })
       .catch((e) => alert('Invalid Update User'))
 

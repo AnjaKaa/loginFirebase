@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { AppBar, Toolbar, Grid, Typography, FormControl, Select, Box } from "@mui/material";
+import { AppBar, Toolbar, Grid, Box, Stack } from "@mui/material";
 import { User, IUser } from '../User';
+import { LogOutButton } from '../LogOutButton';
 
 export interface IHeaderProps {
   user: IUser;
@@ -17,8 +18,12 @@ export function Header({ user }: IHeaderProps) {
             </Box>
           </Grid>
           <Grid item>
-            <User user={user} />
+            <Stack direction="row" spacing={2}>
+              <LogOutButton />
+              <User user={user} />
+            </Stack>
           </Grid>
+
         </Grid>
       </Toolbar>
 

@@ -28,13 +28,15 @@ export function SignUp(props: ISignUpProps) {
       })
       .then(() => {
         auth = getAuth();
-        dispatch(setUser({
-          email: auth.currentUser.email,
-          id: auth.currentUser.uid,
-          token: auth.currentUser.getIdToken(),
-          name: auth.currentUser.displayName
-        }));
-        push('/');
+        auth.currentUser.getIdToken().then((token) => {
+          dispatch(setUser({
+            email: auth.currentUser.email,
+            id: auth.currentUser.uid,
+            token,
+            name: auth.currentUser.displayName
+          }));
+          push('/');
+        })
       })
       .catch(console.error)
   }

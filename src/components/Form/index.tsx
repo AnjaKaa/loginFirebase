@@ -1,5 +1,7 @@
 
-import React, { ChangeEvent, useState, useMemo, FormEvent } from 'react';
+import React, { useState, FormEvent } from 'react';
+import { Link } from "react-router-dom";
+import { Stack, Button, Typography } from "@mui/material";
 import { FormFieldsLogin } from './FormFieldsLogin';
 import { FormFieldsRegister } from './FormFieldsRegister';
 import { FormFieldsUserSettings } from './FormFieldsUserSettings';
@@ -26,7 +28,8 @@ export function Form({ title, handleClick, type }: IFormProps) {
     handleClick(formFields);
   }
 
-  return (<div>
+  return (
+
     <form onSubmit={handleSubmit}>
 
       {
@@ -54,16 +57,42 @@ export function Form({ title, handleClick, type }: IFormProps) {
         />
       }
       {
-        formValid && !formValid.success && formValid.message
+        formValid && !formValid.success &&
+        <Typography variant='h6' align="center" mt={1}>
+          {formValid.message}
+        </Typography>
       }
-      <button
-        type="submit"
-        disabled={!formValid || !formValid.success}
+      <Stack
+        direction="row"
+        justifyContent="center"
+        alignItems="center"
+        spacing={2}
+        sx={{ m: 2 }}
       >
-        {title}
-      </button>
+
+        {
+          type === formType.info &&
+          <Link to="/">
+            <Button
+              type="button"
+            >
+              cancel
+            </Button>
+          </Link>
+        }
+        <Button
+          type="submit"
+          color="primary"
+          variant="contained"
+
+          disabled={!formValid || !formValid.success}
+        >
+          {title}
+        </Button>
+
+      </Stack>
     </form>
-  </div>
+
 
   );
 }

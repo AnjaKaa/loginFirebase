@@ -16,13 +16,16 @@ export function Login(props: ILoginProps) {
     const auth = getAuth();
     signInWithEmailAndPassword(auth, formFields.email, formFields.password)
       .then(({ user }) => {
-        dispatch(setUser({
-          email: user.email,
-          id: user.uid,
-          token: user.getIdToken(),
-          name: user.displayName
-        }));
-        push('/');
+        user.getIdToken().then((token) => {
+
+          dispatch(setUser({
+            email: user.email,
+            id: user.uid,
+            token: token,
+            name: user.displayName
+          }));
+          push('/');
+        })
       })
       .catch(() => alert('Invalid User'))
   }

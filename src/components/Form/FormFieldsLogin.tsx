@@ -1,4 +1,5 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, FocusEvent } from 'react';
+import { TextField } from '@mui/material';
 import { validateLoginForm, IFormValid } from "./validation";
 
 export interface IFormFieldsLoginProps {
@@ -29,7 +30,7 @@ export function FormFieldsLogin({ formValid, setFormValid, setFormFields }: IFor
     })
   }
 
-  const handleInputBlur = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputBlur = (e: FocusEvent<HTMLInputElement>) => {
     const formValid: IFormValid = validateLoginForm({
       email: email,
       password: pass,
@@ -42,28 +43,33 @@ export function FormFieldsLogin({ formValid, setFormValid, setFormFields }: IFor
 
   return (
     <>
-      <div className={`row ${formValid && formValid.errors['email'] ? 'fail' : ''}`}>
-        <input
-          type="email"
-          name="email"
-          value={email}
-          onChange={handleEmailChange}
-          onBlur={handleInputBlur}
-          placeholder="email"
-        />
-        <div className='errorBox'>{formValid && formValid.errors['email']}</div>
-      </div>
-      <div className={`row ${formValid && formValid.errors['password'] && 'fail'}`}>
-        <input
-          type="password"
-          name="password"
-          value={pass}
-          onChange={handlePassChange}
-          onBlur={handleInputBlur}
-          placeholder="password"
-        />
-        <div className='errorBox'>{formValid && formValid.errors['password']}</div>
-      </div>
+
+      <TextField
+        type="email"
+        name="email"
+        value={email}
+        onChange={handleEmailChange}
+        onBlur={handleInputBlur}
+        placeholder="email"
+        label="email"
+        error={formValid && Boolean(formValid.errors['email'])}
+        helperText={formValid?.errors['email']}
+        variant="standard"
+
+      />
+      <TextField
+        type="password"
+        name="password"
+        label="password"
+        value={pass}
+        onChange={handlePassChange}
+        onBlur={handleInputBlur}
+        placeholder="password"
+        error={formValid && Boolean(formValid.errors['password'])}
+        helperText={formValid?.errors['password']}
+        variant="standard"
+
+      />
     </>
   );
 }

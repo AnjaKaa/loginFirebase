@@ -1,4 +1,5 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState, ChangeEvent, FocusEvent } from 'react';
+import { TextField } from '@mui/material';
 import { validateUserSettingsForm, IFormValid } from "./validation";
 import { useAuth } from '../../hooks/use-auth';
 
@@ -42,7 +43,7 @@ export function FormFieldsUserSettings({ formValid, setFormValid, setFormFields 
     })
   }
 
-  const handleInputBlur = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleInputBlur = (e: FocusEvent<HTMLInputElement>) => {
     const formValid: IFormValid = validateUserSettingsForm({
 
       password: pass,
@@ -58,39 +59,42 @@ export function FormFieldsUserSettings({ formValid, setFormValid, setFormFields 
 
   return (
     <>
-      <div className={`row ${formValid && formValid.errors['name'] && 'fail'}`}>
-        <input
-          type="text"
-          name="name"
-          value={name}
-          onChange={handleNameChange}
-          onBlur={handleInputBlur}
-          placeholder="name"
-        />
-        <div className='errorBox'>{formValid && formValid.errors['name']}</div>
-      </div>
-      <div className={`row ${formValid && formValid.errors['password'] && 'fail'}`}>
-        <input
-          type="password"
-          name="password"
-          value={pass}
-          onChange={handlePassChange}
-          onBlur={handleInputBlur}
-          placeholder="password"
-        />
-        <div className='errorBox'>{formValid && formValid.errors['password']}</div>
-      </div>
-      <div className={`row ${formValid && formValid.errors['confirmPassword'] && 'fail'}`}>
-        <input
-          type="password"
-          name="confirmPassword"
-          value={confirmPass}
-          onChange={handleConfirmPassChange}
-          onBlur={handleInputBlur}
-          placeholder="confirm password"
-        />
-        <div className='errorBox'>{formValid && formValid.errors['confirmPassword']}</div>
-      </div>
+      <TextField
+        type="text"
+        name="name"
+        label="name"
+        value={name}
+        onChange={handleNameChange}
+        onBlur={handleInputBlur}
+        placeholder="name"
+        error={formValid && Boolean(formValid.errors['name'])}
+        helperText={formValid?.errors['name']}
+        variant="standard"
+      />
+      <TextField
+        type="password"
+        name="password"
+        label="password"
+        value={pass}
+        onChange={handlePassChange}
+        onBlur={handleInputBlur}
+        placeholder="password"
+        error={formValid && Boolean(formValid.errors['password'])}
+        helperText={formValid?.errors['password']}
+        variant="standard"
+      />
+      <TextField
+        type="password"
+        name="confirmPassword"
+        label="confirm password"
+        value={confirmPass}
+        onChange={handleConfirmPassChange}
+        onBlur={handleInputBlur}
+        placeholder="confirm password"
+        error={formValid && Boolean(formValid.errors['confirmPassword'])}
+        helperText={formValid?.errors['confirmPassword']}
+        variant="standard"
+      />
     </>
   );
 }
