@@ -29,18 +29,22 @@ interface IFormUserSettingsData {
   password: string;
   confirmPassword: string;
   name: string;
+  file?: File;
 }
 interface IUserSettingsErrors {
   password?: string;
   confirmPassword?: string;
   name?: string;
+  file?: string;
 }
 
 export interface IFormValid {
   success: boolean;
   message: string;
-  errors: ILoginErrors;
+  errors: ILoginErrors | IRegisterErrors | IUserSettingsErrors;
 }
+
+const imageReg = /[\/.](gif|jpg|jpeg|png)$/i;
 
 export const validateLoginForm = (payload: IFormLoginData): IFormValid => {
   const errors: ILoginErrors = {};
@@ -133,7 +137,7 @@ export const validateUserSettingsForm = (payload: IFormUserSettingsData): IFormV
   let message: string = "";
   let isFormValid: boolean = true;
 
-  const { confirmPassword, password, name } = payload;
+  const { confirmPassword, password, name, file } = payload;
 
 
 
@@ -165,13 +169,25 @@ export const validateUserSettingsForm = (payload: IFormUserSettingsData): IFormV
   if (
     !payload ||
     typeof password !== "string" ||
-    validator.isEmpty(name.trim())
+    validator.isEmpty(name?.trim())
   ) {
     isFormValid = false;
     errors.name = "Please provide your name.";
   }
 
+  if (
+    file && file?.size > (5 * 1024 * 1024)
+  ) {
+    isFormValid = false;
+    errors.file = "File must be less than 5Mb";
+  }
 
+  if (
+    file && !imageReg.test(file?.name)
+  ) {
+    isFormValid = false;
+    errors.file = "Type of file must be only image(gif, jpg, jpeg, png)";
+  }
 
   if (!isFormValid) {
     message = "Check the form for errors.";

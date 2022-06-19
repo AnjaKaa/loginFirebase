@@ -33,7 +33,8 @@ export function SignUp(props: ISignUpProps) {
             email: auth.currentUser.email,
             id: auth.currentUser.uid,
             token,
-            name: auth.currentUser.displayName
+            name: auth.currentUser.displayName,
+            photoURL: auth.currentUser.photoURL
           }));
           push('/');
         })
