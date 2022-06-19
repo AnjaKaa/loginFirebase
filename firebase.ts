@@ -1,10 +1,8 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, updateProfile, updatePassword } from "firebase/auth";
+import { getAuth, updateProfile, updatePassword, signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
 import { getDownloadURL, getStorage, ref, deleteObject, uploadBytes } from "firebase/storage";
 import uuid from 'react-uuid';
 import env from "react-dotenv";
-
-console.log(env)
 
 const firebaseConfig = {
   apiKey: env.REACT_APP_FIREBASE_API_KEY,
@@ -17,7 +15,57 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 
+export const signUpUser = (formFields: {
+  email: string,
+  password: string,
+  name: string
+}) => {
+  let auth = getAuth();
+  return createUserWithEmailAndPassword(auth, formFields.email, formFields.password)
+    .then(() => {
+      updateProfile(auth.currentUser, {
+        displayName: formFields.name, photoURL: ""
+      })
+    })
+    .then(() => {
+      auth = getAuth();
+      return auth.currentUser.getIdToken().then((token) => {
+        return {
+          email: auth.currentUser.email,
+          id: auth.currentUser.uid,
+          token,
+          name: auth.currentUser.displayName,
+          photoURL: auth.currentUser.photoURL
+        };
+      })
+    })
+    .catch(error => {
+      console.error(error);
+      throw error;
+    })
+}
 
+export const loginUser = (formFields: { email: string, password: string }) => {
+  const auth = getAuth();
+  return signInWithEmailAndPassword(auth, formFields.email, formFields.password)
+    .then(({ user }) => {
+      return user.getIdToken().then((token) => {
+        return {
+          email: user.email,
+          id: user.uid,
+          token: token,
+          name: user.displayName,
+          photoURL: auth.currentUser.photoURL
+
+        };
+
+      })
+    })
+    .catch(error => {
+      console.error(error);
+      throw error;
+    })
+}
 
 export const updateUser = (params: { password: string | null, name: string, file?: any }) => {
   let auth = getAuth();
@@ -70,7 +118,10 @@ export const updateUser = (params: { password: string | null, name: string, file
           }
         })
     })
-    .catch((error) => { alert('Invalid Update User'); console.log(error) })
+    .catch(error => {
+      console.error(error);
+      throw error;
+    })
 
 }
 

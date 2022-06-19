@@ -1,9 +1,10 @@
-import * as React from 'react';
+import React, { useState } from 'react';
 import { useAppDispatch } from '../hooks/redux-hooks'
 import { useHistory } from "react-router-dom";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
 import { setUser } from '../store/slices/userSlice';
 import { Form, formType } from './Form';
+import { loginUser } from '../../firebase';
+import { Alert } from '@mui/material';
 
 export interface ILoginProps {
 }
@@ -12,27 +13,22 @@ export function Login(props: ILoginProps) {
   const dispatch = useAppDispatch();
   const { push } = useHistory();
 
+  const [error, setError] = useState(null);
+
   const handleLogin = (formFields: { email: string, password: string }): void => {
-    const auth = getAuth();
-    signInWithEmailAndPassword(auth, formFields.email, formFields.password)
-      .then(({ user }) => {
-        console.log('user', user);
-        user.getIdToken().then((token) => {
-
-          dispatch(setUser({
-            email: user.email,
-            id: user.uid,
-            token: token,
-            name: user.displayName,
-            photoURL: auth.currentUser.photoURL
-
-          }));
-          push('/');
-        })
+    loginUser(formFields)
+      .then((user) => {
+        dispatch(setUser(user));
+        push('/');
       })
-      .catch(() => alert('Invalid User'))
+      .catch((error) => {
+        setError(error)
+      });
   }
   return (
-    <Form title='sing in' handleClick={handleLogin} type={formType.login} />
+    <>
+      <Form title='sing in' handleClick={handleLogin} type={formType.login} />
+      {error && <Alert severity="error" sx={{ width: '100%' }}>{error?.message}</Alert>}
+    </>
   );
 }
