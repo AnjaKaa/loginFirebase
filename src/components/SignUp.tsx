@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useAppDispatch } from '../hooks/redux-hooks'
 import { useHistory } from "react-router-dom";
-import { setUser } from '../store/slices/userSlice';
+import { beginLoading, endLoading, setUser } from '../store/slices/userSlice';
 import { Form, formType } from './Form';
 import { signUpUser } from '../../firebase';
 import { Alert } from '@mui/material';
@@ -23,6 +23,7 @@ export function SignUp(props: ISignUpProps) {
     string,
     name: string
   }): void => {
+    dispatch(beginLoading());
     signUpUser(formFields).
       then((user) => {
         dispatch(setUser(user));
@@ -30,6 +31,9 @@ export function SignUp(props: ISignUpProps) {
       })
       .catch((error) => {
         setError(error)
+      })
+      .finally(() => {
+        dispatch(endLoading())
       });
 
   }

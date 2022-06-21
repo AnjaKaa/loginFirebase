@@ -1,10 +1,11 @@
 
 import React, { useState, FormEvent } from 'react';
 import { Link } from "react-router-dom";
-import { Stack, Button, Typography } from "@mui/material";
+import { Stack, Button, Typography, Backdrop, CircularProgress } from "@mui/material";
 import { FormFieldsLogin } from './FormFieldsLogin';
 import { FormFieldsRegister } from './FormFieldsRegister';
 import { FormFieldsUserSettings } from './FormFieldsUserSettings';
+import { useAuth } from '../../hooks/use-auth';
 
 import './form.css';
 
@@ -20,6 +21,8 @@ export interface IFormProps {
 }
 
 export function Form({ title, handleClick, type }: IFormProps) {
+  const user = useAuth();
+
   const [formFields, setFormFields] = useState(null)
   const [formValid, setFormValid] = useState(null);
 
@@ -29,70 +32,77 @@ export function Form({ title, handleClick, type }: IFormProps) {
   }
 
   return (
-
-    <form onSubmit={handleSubmit}>
-
-      {
-        type === formType.login &&
-        <FormFieldsLogin
-          formValid={formValid}
-          setFormFields={setFormFields}
-          setFormValid={setFormValid}
-        />
-      }
-      {
-        type === formType.register &&
-        <FormFieldsRegister
-          formValid={formValid}
-          setFormFields={setFormFields}
-          setFormValid={setFormValid}
-        />
-      }
-      {
-        type === formType.info &&
-        <FormFieldsUserSettings
-          formValid={formValid}
-          setFormFields={setFormFields}
-          setFormValid={setFormValid}
-        />
-      }
-      {
-        formValid && !formValid.success &&
-        <Typography variant='h6' align="center" mt={1}>
-          {formValid.message}
-        </Typography>
-      }
-      <Stack
-        direction="row"
-        justifyContent="center"
-        alignItems="center"
-        spacing={2}
-        sx={{ m: 2 }}
-      >
+    <>
+      <form onSubmit={handleSubmit}>
 
         {
-          type === formType.info &&
-          <Link to="/">
-            <Button
-              type="button"
-            >
-              cancel
-            </Button>
-          </Link>
+          type === formType.login &&
+          <FormFieldsLogin
+            formValid={formValid}
+            setFormFields={setFormFields}
+            setFormValid={setFormValid}
+          />
         }
-        <Button
-          type="submit"
-          color="primary"
-          variant="contained"
-
-          disabled={!formValid || !formValid.success}
+        {
+          type === formType.register &&
+          <FormFieldsRegister
+            formValid={formValid}
+            setFormFields={setFormFields}
+            setFormValid={setFormValid}
+          />
+        }
+        {
+          type === formType.info &&
+          <FormFieldsUserSettings
+            formValid={formValid}
+            setFormFields={setFormFields}
+            setFormValid={setFormValid}
+          />
+        }
+        {
+          formValid && !formValid.success &&
+          <Typography variant='h6' align="center" mt={1}>
+            {formValid.message}
+          </Typography>
+        }
+        <Stack
+          direction="row"
+          justifyContent="center"
+          alignItems="center"
+          spacing={2}
+          sx={{ m: 2 }}
         >
-          {title}
-        </Button>
 
-      </Stack>
-    </form>
+          {
+            type === formType.info &&
+            <Link to="/">
+              <Button
+                type="button"
+              >
+                cancel
+              </Button>
+            </Link>
+          }
+          <Button
+            type="submit"
+            color="primary"
+            variant="contained"
 
+            disabled={!formValid || !formValid.success}
+          >
+            {title}
+          </Button>
 
+        </Stack>
+      </form>
+      {user?.loading && (
+        <Backdrop
+          sx={{ color: '#fff', zIndex: (theme) => theme.zIndex.drawer + 1 }}
+          open
+        >
+          <CircularProgress color="inherit" />
+        </Backdrop>
+      )}
+    </>
   );
 }

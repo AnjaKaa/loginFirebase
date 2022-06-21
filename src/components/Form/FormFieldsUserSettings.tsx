@@ -95,6 +95,20 @@ export function FormFieldsUserSettings({ formValid, setFormValid, setFormFields 
 
   }
 
+  const cancelUpdateAvatar = () => {
+    setFile(null);
+    setImagePreviewUrl(user?.avatar);
+    const formValid: IFormValid = validateUserSettingsForm({
+      password: pass,
+      confirmPassword: confirmPass,
+      name,
+      file: null
+    });
+    setFormValid(
+      formValid
+    );
+  }
+
 
   return (
     <>
@@ -105,10 +119,11 @@ export function FormFieldsUserSettings({ formValid, setFormValid, setFormFields 
           <input type="file" hidden onChange={handleChangeFile} accept="image/*" />
         </Button>
         {imagePreviewUrl && imagePreviewUrl !== user?.avatar &&
-          <Button component="label" color="primary" onClick={() => {
-            setFile(null);
-            setImagePreviewUrl(user?.avatar);
-          }}>
+          <Button
+            component="label"
+            color="primary"
+            onClick={cancelUpdateAvatar}
+          >
             cancel
           </Button>
         }

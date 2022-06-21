@@ -7,6 +7,7 @@ export interface IUserState {
   id: number;
   name: string;
   avatar: string;
+  loading: boolean;
 }
 
 const initialState: IUserState = {
@@ -15,6 +16,7 @@ const initialState: IUserState = {
   id: null,
   name: null,
   avatar: null,
+  loading: false
 };
 
 const userSlice = createSlice({
@@ -27,8 +29,6 @@ const userSlice = createSlice({
       state.id = action.payload.id;
       state.name = action.payload.name;
       state.avatar = action.payload.photoURL;
-
-
     },
     removeUser(state) {
       state.email = null;
@@ -36,11 +36,17 @@ const userSlice = createSlice({
       state.id = null;
       state.name = null;
       state.avatar = null;
+    },
+    beginLoading(state) {
+      state.loading = true;
+    },
+    endLoading(state) {
+      state.loading = false;
     }
   }
 });
 
-export const { setUser, removeUser } = userSlice.actions;
+export const { setUser, removeUser, beginLoading, endLoading } = userSlice.actions;
 
 export default userSlice.reducer;
 

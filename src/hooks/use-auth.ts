@@ -2,7 +2,7 @@ import { useSelector, } from 'react-redux';
 import { IRootState } from '../store';
 
 export function useAuth() {
-  const { email, token, id, name, avatar } = useSelector((state: IRootState) => state.user);
+  const { email, token, id, name, avatar, loading } = useSelector((state: IRootState) => state.user);
 
   return {
     isAuth: !!email,
@@ -10,6 +10,7 @@ export function useAuth() {
     token,
     id,
     name,
-    avatar
+    avatar,
+    loading
   }
 }
