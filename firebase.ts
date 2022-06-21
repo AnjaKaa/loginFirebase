@@ -114,7 +114,7 @@ export const updateUser = (params: { password: string | null, name: string, file
             id: auth.currentUser.uid,
             token,
             name: auth.currentUser.displayName,
-            photoURL: photoURL || null
+            photoURL: photoURL || auth.currentUser.photoURL
           }
         })
     })
